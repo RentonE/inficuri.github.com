@@ -9,6 +9,10 @@
 3. 在 `tasks/README.md` 的任务索引表中追加一行
 4. 将档案与任务产出一并提交推送
 
+## 仓库 Skill
+
+- `player-comparison`（`.claude/skills/player-comparison/`）：球员/球队表现对比调研工作流。所有球员对比、球员评价、球员数据查询类任务必须走此 skill（五维评估框架 + 数据交叉验证 + 归档规范）。
+
 ## 仓库结构
 
 - `inficuri.github.com/`：Jekyll 博客站点源码（含 `_site/` 构建产物）
