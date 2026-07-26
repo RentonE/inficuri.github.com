@@ -1,5 +1,7 @@
 # 梅西 vs C 罗：近 100 场国际比赛数据对比
 
+> **注**：本文仅使用进球口径，已被加权重估版取代，保留作底稿。见 [2026-07-26-messi-ronaldo-last-100-weighted.md](2026-07-26-messi-ronaldo-last-100-weighted.md)。
+
 - **分类**：调研查询（research）
 - **日期**：2026-07-26
 - **分支**：`claude/cristiano-ronaldo-legacy-1crif7`

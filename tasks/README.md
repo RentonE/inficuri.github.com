@@ -23,4 +23,6 @@
 | 日期 | 分类 | 任务 | 档案 | 分支 |
 |------|------|------|------|------|
 | 2026-07-26 | 调研查询 | 查询 C 罗历史地位 | [research/2026-07-26-cristiano-ronaldo-legacy.md](research/2026-07-26-cristiano-ronaldo-legacy.md) | `claude/cristiano-ronaldo-legacy-1crif7` |
-| 2026-07-26 | 调研查询 | 梅西 vs C 罗近 100 场国际比赛数据对比 | [research/2026-07-26-messi-ronaldo-last-100-internationals.md](research/2026-07-26-messi-ronaldo-last-100-internationals.md) | `claude/cristiano-ronaldo-legacy-1crif7` |
+| 2026-07-26 | 调研查询 | 梅西 vs C 罗近 100 场国际比赛数据对比（v1，已被 v2 取代） | [research/2026-07-26-messi-ronaldo-last-100-internationals.md](research/2026-07-26-messi-ronaldo-last-100-internationals.md) | `claude/cristiano-ronaldo-legacy-1crif7` |
+| 2026-07-26 | 文档维护 | 方法论：如何评价足球运动员场上表现 | [docs/2026-07-26-player-performance-evaluation-framework.md](docs/2026-07-26-player-performance-evaluation-framework.md) | `claude/cristiano-ronaldo-legacy-1crif7` |
+| 2026-07-26 | 调研查询 | 梅西 vs C 罗近 100 场加权重估（v2：评分/对手强度/赛事权重） | [research/2026-07-26-messi-ronaldo-last-100-weighted.md](research/2026-07-26-messi-ronaldo-last-100-weighted.md) | `claude/cristiano-ronaldo-legacy-1crif7` |
