@@ -1,0 +1,7 @@
+# nuwa skill promo/media assets (not needed for the skill to run)
+.agents/skills/huashu-nuwa/promo/
+.agents/skills/huashu-nuwa/assets/
+.agents/skills/huashu-nuwa/*.png
+.agents/skills/huashu-nuwa/*.jpg
+.agents/skills/huashu-nuwa/*.gif
+.agents/skills/huashu-nuwa/*.mp4
