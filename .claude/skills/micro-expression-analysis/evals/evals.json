@@ -1,0 +1,17 @@
+{
+  "skill_name": "micro-expression-analysis",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我分析这个视频里每个人的表情变化，谁在什么时候笑了，气氛怎么样 @party.mov",
+      "expected_output": "Runs setup + pipeline locally, assigns anonymous roles from chips/contact sheet, reports per-role expression timeline with confidence labels and a disclaimer; nothing uploaded.",
+      "files": ["party.mov"]
+    },
+    {
+      "id": 2,
+      "prompt": "观察一下这段会议视频里有没有微妙的人际张力或勾心斗角的细节 meeting.mp4",
+      "expected_output": "Uses motion.csv + bursts around key moments, grounds claims in gaze/posture/timing observables per reading-protocol, explicitly reports absence of tension if not found, ends with disclaimer block.",
+      "files": ["meeting.mp4"]
+    }
+  ]
+}
