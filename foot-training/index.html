@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>儿童足部训练 · 可视化方案</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦶</text></svg>">
+<style>
+:root{
+  color-scheme: light;
+  --page:#f9f9f7; --surface:#fcfcfb; --surface-2:#f0efec;
+  --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+  --hairline:rgba(11,11,11,.10); --grid:#e1e0d9;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100;
+  --good:#0ca30c; --bad:#d03b3b;
+  --ink-fig:#52514e; --fig-fill:rgba(11,11,11,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme: dark;
+    --page:#0d0d0d; --surface:#1a1a19; --surface-2:#242422;
+    --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;
+    --hairline:rgba(255,255,255,.10); --grid:#2c2c2a;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+    --good:#0ca30c; --bad:#e66767;
+    --ink-fig:#c3c2b7; --fig-fill:rgba(255,255,255,.06);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --page:#0d0d0d; --surface:#1a1a19; --surface-2:#242422;
+  --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;
+  --hairline:rgba(255,255,255,.10); --grid:#2c2c2a;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+  --good:#0ca30c; --bad:#e66767;
+  --ink-fig:#c3c2b7; --fig-fill:rgba(255,255,255,.06);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--page); color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1000px; margin:0 auto; padding:32px 20px 64px}
+
+/* ---------- header ---------- */
+header h1{font-size:28px; margin:0 0 6px; letter-spacing:.5px}
+.kicker{font-size:12px; font-weight:600; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:8px}
+.lede{color:var(--ink-2); font-size:14.5px; max-width:62em; margin:0}
+.meta-row{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px}
+.meta-chip{
+  display:flex; flex-direction:column; gap:2px; padding:10px 16px;
+  background:var(--surface); border:1px solid var(--hairline); border-radius:12px; min-width:120px;
+}
+.meta-chip .lbl{font-size:11.5px; color:var(--muted)}
+.meta-chip .val{font-size:17px; font-weight:600}
+
+/* ---------- order strip ---------- */
+.order{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:22px 0 6px}
+.order .step{
+  display:flex; align-items:center; gap:8px; padding:7px 12px;
+  background:var(--surface); border:1px solid var(--hairline); border-radius:999px; font-size:13.5px;
+}
+.order .dot{width:10px; height:10px; border-radius:50%; flex:none}
+.order .arrow{color:var(--muted); font-size:13px}
+.order-note{font-size:12.5px; color:var(--muted); margin:4px 0 0}
+
+/* ---------- sections ---------- */
+section{margin-top:36px}
+h2{font-size:19px; margin:0 0 4px}
+.sec-sub{font-size:13px; color:var(--muted); margin:0 0 16px}
+
+/* ---------- exercise cards ---------- */
+.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:18px}
+.card{
+  background:var(--surface); border:1px solid var(--hairline); border-radius:16px;
+  overflow:hidden; display:flex; flex-direction:column;
+}
+.card .accent{height:4px; background:var(--c)}
+.card .body{padding:16px 18px 18px; display:flex; flex-direction:column; gap:12px; flex:1}
+.card h3{display:flex; align-items:center; gap:10px; margin:0; font-size:16.5px}
+.card h3 .sw{width:12px; height:12px; border-radius:3px; background:var(--c); flex:none}
+.card h3 .idx{color:var(--muted); font-weight:600; font-size:13px}
+.gear{font-size:12px; color:var(--muted); margin-left:auto; border:1px solid var(--hairline); border-radius:999px; padding:2px 10px; white-space:nowrap}
+.fig-box{background:var(--surface-2); border-radius:12px; padding:6px 4px}
+.fig-box svg{display:block; width:100%; height:auto}
+.dose{display:flex; flex-wrap:wrap; gap:8px}
+.dose .chip{
+  display:flex; align-items:baseline; gap:6px; font-size:13px;
+  background:color-mix(in srgb, var(--c) 8%, var(--surface));
+  border:1px solid var(--hairline); border-radius:999px; padding:4px 12px;
+}
+.dose .chip b{font-size:14px}
+.dose .chip .u{color:var(--ink-2); font-size:12px}
+.cues{display:grid; gap:4px; margin:0; padding:0; list-style:none; font-size:13.5px; color:var(--ink-2)}
+.cues li{display:flex; gap:8px; align-items:baseline}
+.cues .ic{flex:none; font-weight:700; font-size:12.5px; width:16px; text-align:center}
+.cues .ok .ic{color:var(--good)}
+.cues .no .ic{color:var(--bad)}
+.cues .no{color:var(--muted)}
+.cues-hd{font-size:12px; color:var(--muted); margin:2px 0 0; font-weight:600}
+
+/* ---------- svg strokes ---------- */
+.st-fig{stroke:var(--ink-fig); stroke-width:5; stroke-linecap:round; stroke-linejoin:round; fill:none}
+.st-fig-thin{stroke:var(--ink-fig); stroke-width:3; stroke-linecap:round; stroke-linejoin:round; fill:none}
+.st-head{fill:none; stroke:var(--ink-fig); stroke-width:4.5}
+.st-prop{stroke:var(--muted); stroke-width:4; stroke-linecap:round; fill:none}
+.st-floor{stroke:var(--grid); stroke-width:3; stroke-linecap:round}
+.st-c{stroke:var(--c); fill:none; stroke-linecap:round}
+.fill-c{fill:var(--c)}
+.wash-c{fill:var(--c); opacity:.12}
+.st-dash{stroke:var(--muted); stroke-width:1.5; stroke-dasharray:4 4; fill:none}
+.svg-lbl{font-size:10.5px; fill:var(--muted); font-family:inherit}
+.ring{stroke:var(--surface-2); stroke-width:2}
+
+/* ---------- tracker ---------- */
+.tracker{background:var(--surface); border:1px solid var(--hairline); border-radius:16px; padding:20px}
+.track-scroll{overflow-x:auto}
+.track-grid{display:grid; grid-template-columns:64px repeat(7,minmax(38px,1fr)); gap:6px; min-width:420px; align-items:center}
+.track-grid .hd{font-size:12px; color:var(--muted); text-align:center}
+.track-grid .wk{font-size:12.5px; color:var(--ink-2); font-weight:600}
+button.day{
+  appearance:none; border:1px solid var(--hairline); background:var(--surface-2);
+  width:40px; height:40px; border-radius:50%; cursor:pointer; justify-self:center;
+  font-size:14px; color:transparent; transition:transform .08s ease;
+}
+button.day:active{transform:scale(.92)}
+button.day[aria-pressed="true"]{background:var(--good); border-color:var(--good); color:#fff; font-weight:700}
+.meter-row{display:flex; align-items:center; gap:12px; margin-top:16px; flex-wrap:wrap}
+.meter{flex:1 1 200px; height:8px; border-radius:4px; background:color-mix(in srgb, var(--good) 12%, var(--surface)); overflow:hidden}
+.meter i{display:block; height:100%; width:0%; background:var(--good); border-radius:4px; transition:width .2s ease}
+.meter-lbl{font-size:13px; color:var(--ink-2)}
+.meter-lbl b{color:var(--ink); font-size:15px}
+.track-btns{display:flex; gap:10px; margin-top:14px}
+.btn{
+  appearance:none; font:inherit; font-size:13px; padding:7px 16px; border-radius:999px;
+  border:1px solid var(--hairline); background:var(--surface-2); color:var(--ink); cursor:pointer;
+}
+.btn:hover{border-color:var(--muted)}
+
+/* ---------- notes ---------- */
+.notes{background:var(--surface); border:1px solid var(--hairline); border-radius:16px; padding:18px 20px}
+.notes ul{margin:6px 0 0; padding-left:18px; color:var(--ink-2); font-size:13.5px}
+.notes li{margin:4px 0}
+footer{margin-top:40px; font-size:12px; color:var(--muted); text-align:center}
+
+/* ---------- print ---------- */
+@media print{
+  body{background:#fff; color:#000}
+  .wrap{max-width:none; padding:0}
+  .no-print{display:none !important}
+  .card,.tracker,.notes,.meta-chip{border-color:#ccc; break-inside:avoid}
+  .cards{grid-template-columns:1fr 1fr}
+  button.day{color-adjust:exact; -webkit-print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">FOOT TRAINING PLAN</div>
+  <h1>儿童足部训练 · 可视化方案</h1>
+  <p class="lede">按「放松 → 激活 → 力量」的顺序完成 4 个动作。剂量为建议值，可按孩子的情况调整；全程应当无痛，若为矫正目的（如足弓问题），请以医生或康复师的意见为准。</p>
+  <div class="meta-row">
+    <div class="meta-chip"><span class="lbl">动作</span><span class="val">4 个</span></div>
+    <div class="meta-chip"><span class="lbl">每次用时</span><span class="val">约 15 分钟</span></div>
+    <div class="meta-chip"><span class="lbl">建议频率</span><span class="val">每周 ≥ 5 天</span></div>
+    <div class="meta-chip"><span class="lbl">打卡周期</span><span class="val">4 周</span></div>
+  </div>
+  <div class="order" aria-label="训练顺序">
+    <span class="step"><span class="dot" style="background:var(--s1)"></span>① 滚球放松</span><span class="arrow">→</span>
+    <span class="step"><span class="dot" style="background:var(--s2)"></span>② 扶边抬脚趾</span><span class="arrow">→</span>
+    <span class="step"><span class="dot" style="background:var(--s3)"></span>③ 弹力带转脚</span><span class="arrow">→</span>
+    <span class="step"><span class="dot" style="background:var(--s4)"></span>④ 瑜伽砖提踵</span>
+  </div>
+  <p class="order-note">先放松脚底，再唤醒脚趾与足弓，最后做力量练习，组间休息 30–60 秒。</p>
+</header>
+
+<section>
+  <h2>动作图解</h2>
+  <p class="sec-sub">示意图为动态演示（系统开启"减少动态效果"时自动静止）。</p>
+  <div class="cards">
+
+  <!-- ═══════════ 1 · 滚球放松 ═══════════ -->
+  <article class="card" style="--c:var(--s1)">
+    <div class="accent"></div>
+    <div class="body">
+      <h3><span class="sw"></span><span class="idx">动作 1</span>脚底滚按摩球<span class="gear">按摩球</span></h3>
+      <div class="fig-box">
+        <svg viewBox="0 0 320 230" role="img" aria-label="坐姿，脚悬空踩在按摩球上，慢速前后滚动脚掌中间">
+          <defs>
+            <marker id="m1" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L8,4 L0,8 Z" class="fill-c"/>
+            </marker>
+          </defs>
+          <!-- floor -->
+          <line x1="16" y1="203" x2="304" y2="203" class="st-floor"/>
+          <!-- chair -->
+          <line x1="46" y1="54" x2="46" y2="120" class="st-prop"/>
+          <line x1="44" y1="120" x2="116" y2="120" class="st-prop"/>
+          <line x1="52" y1="120" x2="52" y2="201" class="st-prop"/>
+          <line x1="110" y1="120" x2="110" y2="201" class="st-prop"/>
+          <!-- person -->
+          <circle cx="104" cy="42" r="13" class="st-head"/>
+          <path d="M100,58 L88,114" class="st-fig"/>
+          <path d="M100,64 L124,88 L146,104" class="st-fig"/>
+          <path d="M88,114 L152,108 L166,164" class="st-fig"/>
+          <!-- foot, hovering (slight rock) -->
+          <g>
+            <path d="M166,164 L154,178 L202,173" class="st-fig"/>
+            <animateTransform attributeName="transform" type="rotate"
+              values="0 166 164; 2.5 166 164; 0 166 164" keyTimes="0;.5;1"
+              calcMode="spline" keySplines=".42 0 .58 1;.42 0 .58 1" dur="3.2s" repeatCount="indefinite"/>
+          </g>
+          <!-- hover cue -->
+          <line x1="206" y1="181" x2="206" y2="200" class="st-dash"/>
+          <text x="212" y="196" class="svg-lbl">脚不碰地</text>
+          <!-- ball -->
+          <g>
+            <circle cx="176" cy="190" r="13" class="fill-c ring"/>
+            <animateTransform attributeName="transform" type="translate"
+              values="-14 0; 14 0; -14 0" keyTimes="0;.5;1"
+              calcMode="spline" keySplines=".42 0 .58 1;.42 0 .58 1" dur="3.2s" repeatCount="indefinite"/>
+          </g>
+          <!-- roll range -->
+          <line x1="158" y1="213" x2="158" y2="221" class="st-dash"/>
+          <line x1="196" y1="213" x2="196" y2="221" class="st-dash"/>
+          <line x1="163" y1="217" x2="191" y2="217" class="st-c" stroke-width="2" marker-start="url(#m1)" marker-end="url(#m1)"/>
+          <text x="206" y="221" class="svg-lbl">只滚中间</text>
+        </svg>
+      </div>
+      <div class="dose">
+        <span class="chip"><b>每侧 1–2</b><span class="u">分钟</span></span>
+        <span class="chip"><b>2</b><span class="u">组</span></span>
+        <span class="chip"><b>慢速</b><span class="u">来回滚</span></span>
+      </div>
+      <p class="cues-hd">要领</p>
+      <ul class="cues">
+        <li class="ok"><span class="ic">✓</span>坐姿，单脚踩球，慢速前后滚动</li>
+        <li class="ok"><span class="ic">✓</span>只滚脚掌中间（足弓一带）</li>
+        <li class="ok"><span class="ic">✓</span>稍微使劲往下压，有酸胀感但不痛</li>
+        <li class="ok"><span class="ic">✓</span>脚全程悬空，不碰到地面</li>
+      </ul>
+      <p class="cues-hd">避免</p>
+      <ul class="cues">
+        <li class="no"><span class="ic">✗</span>滚到脚趾头或脚跟</li>
+        <li class="no"><span class="ic">✗</span>速度太快、压得太重</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- ═══════════ 2 · 扶边抬脚趾 ═══════════ -->
+  <article class="card" style="--c:var(--s2)">
+    <div class="accent"></div>
+    <div class="body">
+      <h3><span class="sw"></span><span class="idx">动作 2</span>扶边单脚站 · 抬脚趾<span class="gear">桌边 / 墙</span></h3>
+      <div class="fig-box">
+        <svg viewBox="0 0 320 230" role="img" aria-label="手扶桌边，一侧脚抬起，支撑腿膝盖微屈，支撑脚反复抬起脚趾">
+          <defs>
+            <marker id="m2" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L8,4 L0,8 Z" class="fill-c"/>
+            </marker>
+          </defs>
+          <line x1="16" y1="203" x2="304" y2="203" class="st-floor"/>
+          <!-- table -->
+          <line x1="28" y1="92" x2="112" y2="92" class="st-prop"/>
+          <line x1="36" y1="92" x2="36" y2="201" class="st-prop"/>
+          <line x1="104" y1="92" x2="104" y2="201" class="st-prop"/>
+          <!-- person -->
+          <circle cx="168" cy="32" r="13" class="st-head"/>
+          <path d="M166,48 L172,104" class="st-fig"/>
+          <!-- arm to table -->
+          <path d="M166,52 L134,72 L100,88" class="st-fig"/>
+          <!-- lifted leg (march) -->
+          <path d="M172,104 L204,124 L208,160 L224,164" class="st-fig"/>
+          <!-- standing leg, knee soft -->
+          <path d="M172,104 L166,148 L172,186" class="st-fig"/>
+          <!-- knee cue -->
+          <path d="M158,140 A14,14 0 0 0 158,156" class="st-dash"/>
+          <text x="152" y="152" text-anchor="end" class="svg-lbl">膝盖微屈</text>
+          <!-- standing foot: heel+ball planted -->
+          <path d="M172,184 L158,198 L190,198" class="st-fig"/>
+          <!-- toes lifting -->
+          <g>
+            <path d="M190,198 L207,197" class="st-fig"/>
+            <animateTransform attributeName="transform" type="rotate"
+              values="0 190 198; -26 190 198; 0 190 198; 0 190 198" keyTimes="0;.35;.7;1"
+              calcMode="spline" keySplines=".42 0 .58 1;.42 0 .58 1;0 0 1 1" dur="2.6s" repeatCount="indefinite"/>
+          </g>
+          <!-- toe-lift arrow -->
+          <path d="M216,192 A22,22 0 0 0 206,174" class="st-c" stroke-width="2" marker-end="url(#m2)"/>
+          <!-- lifted-foot cue -->
+          <line x1="232" y1="170" x2="232" y2="196" class="st-dash"/>
+          <text x="232" y="214" text-anchor="middle" class="svg-lbl">一侧脚抬起</text>
+        </svg>
+      </div>
+      <div class="dose">
+        <span class="chip"><b>每侧 15</b><span class="u">次</span></span>
+        <span class="chip"><b>2</b><span class="u">组</span></span>
+        <span class="chip"><b>左右</b><span class="u">交替</span></span>
+      </div>
+      <p class="cues-hd">要领</p>
+      <ul class="cues">
+        <li class="ok"><span class="ic">✓</span>手扶桌边或墙，保持平衡</li>
+        <li class="ok"><span class="ic">✓</span>一侧脚抬起，单脚站立</li>
+        <li class="ok"><span class="ic">✓</span>支撑腿膝盖微屈，再抬起脚趾</li>
+        <li class="ok"><span class="ic">✓</span>脚趾抬到最高，慢慢放下</li>
+      </ul>
+      <p class="cues-hd">避免</p>
+      <ul class="cues">
+        <li class="no"><span class="ic">✗</span>膝盖伸直锁死</li>
+        <li class="no"><span class="ic">✗</span>身体歪斜，把重量全压在扶手上</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- ═══════════ 3 · 弹力带转脚 ═══════════ -->
+  <article class="card" style="--c:var(--s3)">
+    <div class="accent"></div>
+    <div class="body">
+      <h3><span class="sw"></span><span class="idx">动作 3</span>踩弹力带 · 脚跟转半圈<span class="gear">弹力带</span></h3>
+      <div class="fig-box">
+        <svg viewBox="0 0 320 230" role="img" aria-label="俯视图：两脚分开踩住弹力带，脚掌平贴，以脚跟为圆心轮流把前脚掌转出半圈再转回">
+          <defs>
+            <marker id="m3" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L8,4 L0,8 Z" class="fill-c"/>
+            </marker>
+          </defs>
+          <!-- mat -->
+          <rect x="22" y="26" width="276" height="192" rx="12" fill="none" class="st-dash"/>
+          <!-- band -->
+          <rect x="34" y="112" width="252" height="22" rx="9" class="wash-c"/>
+          <rect x="34" y="112" width="252" height="22" rx="9" class="st-c" stroke-width="2.5"/>
+          <!-- left foot -->
+          <g>
+            <path d="M118,176 L140,93 A86,86 0 0 0 57,115 Z" class="wash-c"/>
+            <path d="M137,101 A78,78 0 0 0 63,121" class="st-c" stroke-width="2" stroke-dasharray="5 5" marker-start="url(#m3)" marker-end="url(#m3)"/>
+            <g transform="rotate(14 118 176)">
+              <path d="M118,186 C107,186 102,168 104,150 C105,138 102,124 106,110 C109,98 122,94 129,100 C135,106 134,124 132,140 C131,154 133,170 128,180 C125,185 122,186 118,186 Z"
+                    class="st-fig-thin" style="fill:var(--fig-fill)"/>
+              <circle cx="133" cy="92" r="5.5" class="st-fig-thin" style="fill:var(--fig-fill)"/>
+              <circle cx="123" cy="88" r="4"   class="st-fig-thin" style="fill:var(--fig-fill)"/>
+              <circle cx="114" cy="88" r="3.4" class="st-fig-thin" style="fill:var(--fig-fill)"/>
+              <circle cx="106" cy="91" r="3"   class="st-fig-thin" style="fill:var(--fig-fill)"/>
+              <circle cx="99"  cy="96" r="2.7" class="st-fig-thin" style="fill:var(--fig-fill)"/>
+              <animateTransform attributeName="transform" type="rotate"
+                values="14 118 176; -46 118 176; 14 118 176; 14 118 176" keyTimes="0;.25;.5;1"
+                calcMode="spline" keySplines=".42 0 .58 1;.42 0 .58 1;0 0 1 1" dur="5.2s" repeatCount="indefinite"/>
+            </g>
+            <circle cx="118" cy="176" r="4.5" class="fill-c ring"/>
+          </g>
+          <!-- right foot (mirrored) -->
+          <g transform="translate(320 0) scale(-1 1)">
+            <path d="M118,176 L140,93 A86,86 0 0 0 57,115 Z" class="wash-c"/>
+            <path d="M137,101 A78,78 0 0 0 63,121" class="st-c" stroke-width="2" stroke-dasharray="5 5" marker-start="url(#m3)" marker-end="url(#m3)"/>
+            <g transform="rotate(14 118 176)">
+              <path d="M118,186 C107,186 102,168 104,150 C105,138 102,124 106,110 C109,98 122,94 129,100 C135,106 134,124 132,140 C131,154 133,170 128,180 C125,185 122,186 118,186 Z"
+                    class="st-fig-thin" style="fill:var(--fig-fill)"/>
+              <circle cx="133" cy="92" r="5.5" class="st-fig-thin" style="fill:var(--fig-fill)"/>
+              <circle cx="123" cy="88" r="4"   class="st-fig-thin" style="fill:var(--fig-fill)"/>
+              <circle cx="114" cy="88" r="3.4" class="st-fig-thin" style="fill:var(--fig-fill)"/>
+              <circle cx="106" cy="91" r="3"   class="st-fig-thin" style="fill:var(--fig-fill)"/>
+              <circle cx="99"  cy="96" r="2.7" class="st-fig-thin" style="fill:var(--fig-fill)"/>
+              <animateTransform attributeName="transform" type="rotate"
+                values="14 118 176; -46 118 176; 14 118 176; 14 118 176" keyTimes="0;.25;.5;1"
+                calcMode="spline" keySplines=".42 0 .58 1;.42 0 .58 1;0 0 1 1" dur="5.2s" repeatCount="indefinite" begin="2.6s"/>
+            </g>
+            <circle cx="118" cy="176" r="4.5" class="fill-c ring"/>
+          </g>
+          <text x="160" y="212" text-anchor="middle" class="svg-lbl">俯视 · 脚跟为圆心 · 两脚轮流</text>
+        </svg>
+      </div>
+      <div class="dose">
+        <span class="chip"><b>每侧 10</b><span class="u">圈</span></span>
+        <span class="chip"><b>2</b><span class="u">组</span></span>
+        <span class="chip"><b>两脚</b><span class="u">轮流</span></span>
+      </div>
+      <p class="cues-hd">要领</p>
+      <ul class="cues">
+        <li class="ok"><span class="ic">✓</span>两脚分开，踩紧弹力带（约与肩同宽）</li>
+        <li class="ok"><span class="ic">✓</span>脚掌保持平平贴地</li>
+        <li class="ok"><span class="ic">✓</span>以脚跟为圆心，前脚掌转半圈再转回</li>
+        <li class="ok"><span class="ic">✓</span>两脚轮流进行</li>
+      </ul>
+      <p class="cues-hd">避免</p>
+      <ul class="cues">
+        <li class="no"><span class="ic">✗</span>脚跟离地或跟着一起转</li>
+        <li class="no"><span class="ic">✗</span>脚掌翻起、只用脚趾带动</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- ═══════════ 4 · 瑜伽砖提踵 ═══════════ -->
+  <article class="card" style="--c:var(--s4)">
+    <div class="accent"></div>
+    <div class="body">
+      <h3><span class="sw"></span><span class="idx">动作 4</span>垫瑜伽砖提踵<span class="gear">瑜伽砖</span></h3>
+      <div class="fig-box">
+        <svg viewBox="0 0 320 230" role="img" aria-label="前脚掌踩在瑜伽砖上，手扶墙，脚跟先降到低于砖面再提到最高，一组三十个">
+          <defs>
+            <marker id="m4" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L8,4 L0,8 Z" class="fill-c"/>
+            </marker>
+          </defs>
+          <line x1="16" y1="203" x2="304" y2="203" class="st-floor"/>
+          <!-- wall -->
+          <line x1="286" y1="24" x2="286" y2="203" class="st-prop"/>
+          <line x1="286" y1="52" x2="296" y2="42" class="st-prop" stroke-width="2"/>
+          <line x1="286" y1="92" x2="296" y2="82" class="st-prop" stroke-width="2"/>
+          <line x1="286" y1="132" x2="296" y2="122" class="st-prop" stroke-width="2"/>
+          <!-- yoga block -->
+          <rect x="186" y="178" width="64" height="25" rx="3" class="fill-c"/>
+          <!-- body (rises) -->
+          <g>
+            <circle cx="198" cy="21" r="12" class="st-head"/>
+            <path d="M194,36 L182,84 L187,124 L180,158" class="st-fig"/>
+            <path d="M192,40 L232,58 L276,72" class="st-fig"/>
+            <animateTransform attributeName="transform" type="translate"
+              values="0 0; 0 -15; 0 0" keyTimes="0;.5;1"
+              calcMode="spline" keySplines=".42 0 .58 1;.42 0 .58 1" dur="3.6s" repeatCount="indefinite"/>
+          </g>
+          <!-- foot (heel swings under/over block top) -->
+          <g>
+            <path d="M179,153 L172,180 L226,176 L242,175" class="st-fig"/>
+            <animateTransform attributeName="transform" type="rotate"
+              values="-6 226 176; 16 226 176; -6 226 176" keyTimes="0;.5;1"
+              calcMode="spline" keySplines=".42 0 .58 1;.42 0 .58 1" dur="3.6s" repeatCount="indefinite"/>
+          </g>
+          <!-- range cue -->
+          <line x1="140" y1="178" x2="186" y2="178" class="st-dash"/>
+          <line x1="152" y1="152" x2="152" y2="194" class="st-c" stroke-width="2" marker-start="url(#m4)" marker-end="url(#m4)"/>
+          <text x="144" y="146" class="svg-lbl" text-anchor="middle">全幅度</text>
+          <text x="132" y="192" class="svg-lbl" text-anchor="end">低于砖面</text>
+        </svg>
+      </div>
+      <div class="dose">
+        <span class="chip"><b>30</b><span class="u">个 / 组</span></span>
+        <span class="chip"><b>2</b><span class="u">组（可从 1 组起）</span></span>
+        <span class="chip"><b>慢下</b><span class="u">快上</span></span>
+      </div>
+      <p class="cues-hd">要领</p>
+      <ul class="cues">
+        <li class="ok"><span class="ic">✓</span>前脚掌踩砖，脚跟悬空，手扶墙</li>
+        <li class="ok"><span class="ic">✓</span>脚跟先降到低于砖面（感到小腿拉伸）</li>
+        <li class="ok"><span class="ic">✓</span>再提到最高，顶端稍停 1 秒</li>
+        <li class="ok"><span class="ic">✓</span>下放放慢，动作连贯</li>
+      </ul>
+      <p class="cues-hd">避免</p>
+      <ul class="cues">
+        <li class="no"><span class="ic">✗</span>只做一半幅度、身体前后晃</li>
+        <li class="no"><span class="ic">✗</span>膝盖大幅弯曲借力</li>
+      </ul>
+    </div>
+  </article>
+
+  </div>
+</section>
+
+<!-- ═══════════ tracker ═══════════ -->
+<section>
+  <h2>4 周打卡表</h2>
+  <p class="sec-sub">完成当天全部 4 个动作后点一下打卡，进度自动保存在本机浏览器。</p>
+  <div class="tracker">
+    <div class="track-scroll">
+      <div class="track-grid" id="grid">
+        <span class="hd"></span>
+        <span class="hd">一</span><span class="hd">二</span><span class="hd">三</span><span class="hd">四</span>
+        <span class="hd">五</span><span class="hd">六</span><span class="hd">日</span>
+      </div>
+    </div>
+    <div class="meter-row">
+      <span class="meter-lbl">已打卡 <b id="count">0</b> / 28 天</span>
+      <div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="28" aria-valuenow="0" id="meter"><i id="meterFill"></i></div>
+    </div>
+    <div class="track-btns no-print">
+      <button class="btn" id="printBtn">🖨 打印方案</button>
+      <button class="btn" id="resetBtn">重置打卡</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ notes ═══════════ -->
+<section>
+  <h2>注意事项</h2>
+  <div class="notes">
+    <ul>
+      <li>所有动作应当<b>无痛</b>进行；出现疼痛（不是酸胀）立即停止。</li>
+      <li>赤足或穿防滑袜，在防滑地面练习；儿童训练建议家长在旁陪同保护。</li>
+      <li>剂量循序渐进：先保证动作质量，再增加次数和组数。</li>
+      <li>本页依据家长提供的动作要点整理，仅作家庭练习参考；如为足弓矫正等医疗目的，请遵医生 / 康复师的个体化指导。</li>
+    </ul>
+  </div>
+</section>
+
+<footer>儿童足部训练可视化方案 · 2026-08 整理 · 建议配合定期复查调整</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  /* ---- 4-week check-off grid ---- */
+  var KEY="foot-training-checklist-v1", DAYS=28;
+  var state=[]; try{ state=JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){}
+  if(!Array.isArray(state)||state.length!==DAYS) state=new Array(DAYS).fill(false);
+
+  var grid=document.getElementById("grid");
+  for(var w=0; w<4; w++){
+    var lbl=document.createElement("span");
+    lbl.className="wk"; lbl.textContent="第 "+(w+1)+" 周";
+    grid.appendChild(lbl);
+    for(var d=0; d<7; d++){
+      (function(idx){
+        var b=document.createElement("button");
+        b.className="day"; b.type="button";
+        b.setAttribute("aria-label","第"+(Math.floor(idx/7)+1)+"周 星期"+"一二三四五六日"[idx%7]);
+        b.setAttribute("aria-pressed", state[idx]?"true":"false");
+        b.textContent="✓";
+        b.addEventListener("click",function(){
+          state[idx]=!state[idx];
+          b.setAttribute("aria-pressed", state[idx]?"true":"false");
+          save(); update();
+        });
+        grid.appendChild(b);
+      })(w*7+d);
+    }
+  }
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){} }
+  function update(){
+    var n=state.filter(Boolean).length;
+    document.getElementById("count").textContent=n;
+    document.getElementById("meterFill").style.width=(n/DAYS*100)+"%";
+    document.getElementById("meter").setAttribute("aria-valuenow",n);
+  }
+  update();
+
+  document.getElementById("resetBtn").addEventListener("click",function(){
+    if(confirm("清空全部打卡记录？")){ state=new Array(DAYS).fill(false);
+      save();
+      var btns=grid.querySelectorAll("button.day");
+      for(var i=0;i<btns.length;i++) btns[i].setAttribute("aria-pressed","false");
+      update();
+    }
+  });
+  document.getElementById("printBtn").addEventListener("click",function(){ window.print(); });
+
+  /* ---- pause SVG animation for reduced motion & print ---- */
+  var svgs=document.querySelectorAll("svg");
+  function setAnim(run){
+    svgs.forEach(function(s){ try{ run?s.unpauseAnimations():s.pauseAnimations(); }catch(e){} });
+  }
+  var rm=window.matchMedia("(prefers-reduced-motion: reduce)");
+  if(rm.matches) setAnim(false);
+  rm.addEventListener && rm.addEventListener("change",function(e){ setAnim(!e.matches); });
+  window.addEventListener("beforeprint",function(){ setAnim(false); });
+  window.addEventListener("afterprint",function(){ if(!rm.matches) setAnim(true); });
+})();
+</script>
+</body>
+</html>
